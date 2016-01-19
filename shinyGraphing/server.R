@@ -9,8 +9,7 @@ options(shiny.maxRequestSize = - 1)
 
 # Define headers for thetas, Fst and intersect data
 thetas.headers <- c("(indexStart,indexStop)(firstPos_withData,lastPos_withData)(WinStart,WinStop)", "Chr","WinCenter", "tW", "tP", "tF", "tH", "tL", "Tajima", "fuf", "fud", "fayh", "zeng", "nSites")
-fst.headers <- c("A", "AB", "f", "FST", "Pvar")
-intersect.headers <- c("Chr", "bp")
+fst.headers <- c("Chr", "bp", "A", "AB", "f", "FST", "Pvar")
 sfs.headers <- c("Allele_Frequency")
 
 not.loaded <- TRUE
@@ -43,9 +42,9 @@ shinyServer(
     dataInputFst = reactive({
       data <- input$userFst
       path <- as.character(data$datapath)
-      fst <- read.table(file=path,
-                        sep="\t",
-                        col.names=fst.headers
+      fst <- read.table(file = path,
+                        sep = "",
+                        col.names = fst.headers
       )
       return(fst)
     })
@@ -65,7 +64,7 @@ shinyServer(
     dataInputAdmix = reactive({
       data <- input$userAdmix
       path <- as.character(data$datapath)
-      admix <- read.table(path, header = FALSE, fill = TRUE)
+      admix <- t(as.matrix(read.table(path, header = FALSE, fill = TRUE)))
       return(admix)
     })
     
@@ -418,8 +417,12 @@ shinyServer(
       fst <- tryCatch({
         dataInputFst()
       }, error = function(err) {
-        sfs <- fread("Inversion.Liana_AB_NAM.fst")
+        fst <- read.table("graph.me.fst", sep = "", header = F, col.names = fst.headers)
       })
+      
+      #fst.intersect <- cbind(intersect, fst)
+      #fst <- subset(fst, Chr==input$fstChrom)
+      fst.intersect <- subset(fst, FST>=0 & FST <=1)  # keep values between 0 and 1
       
       if(input$annotations){
         validate(need(input$userAnnotations, 
@@ -431,11 +434,15 @@ shinyServer(
       }
       
       # Pull columns to graph
-      fst.FST <- subset(fst$FST, fst$FST > 0)
-#      f.FST <- subset(fst$f, fst$f > 0)
+      if(input$subset) {
+        fst.plot <- subset(fst.intersect, bp >= input$intersectLow & bp <= input$intersectHigh)
+      }
+      else {
+        fst.plot <- fst.intersect
+      }
       
       if(input$annotations) {
-        plot(fst.FST/sum(fst.FST),
+        plot(fst.plot$bp, fst.plot$FST,
              t = "p", pch = 19,
              col = rgb(0, 0, 0, 0.5),
              xlab = "Position (bp)",
@@ -447,12 +454,12 @@ shinyServer(
                  col = rgb(0.18, 0.55, 0.8, 0.75),
                  border = NA))
         if(input$fstLowess){
-          lines(lowess(fst.f, fst.FST,
+          lines(lowess(fst.plot$f, fst.plot$FST,
                        f=0.1), col="red")
         }
       }
       else {
-        plot(fst.FST/sum(fst.FST),
+        plot(fst.plot$bp, fst.plot$FST,
              t = "p", pch = 19,
              col = rgb(0, 0, 0, 0.5),
              xlab = "Position (bp)",
@@ -460,8 +467,8 @@ shinyServer(
              main = paste("Fst along chromosome")
              )
         if(input$fstLowess) {
-          lines(lowess(fst.f, fst.FST, f = 0.1,
-                       col ="red"))
+          lines(lowess(fst.plot$f, fst.plot$FST, f = 0.1),
+                       col ="red")
         }
       }
     })
@@ -471,8 +478,11 @@ shinyServer(
       fst <- tryCatch({
         dataInputFst()
       }, error = function(err) {
-        sfs <- fread("C:/Users/Chaochih/Dropbox/ANGSD_Wrapper/output_barley2_PH/Inversion.Liana_AB_NAM.fst")
+        fst <- read.table("graph.me.fst", sep = "", header = F, col.names = fst.headers)
       })
+      
+      # Only pull values between 0 and 1
+      fst.intersect <- subset(fst, FST >= 0 & FST <= 1)
       
       if(input$annotations){
         validate(need(input$userAnnotations, 
@@ -484,10 +494,15 @@ shinyServer(
       }
       
       # Pull columns to graph
-      fst.FST <- subset(fst$FST, fst$FST > 0)
+      if(input$subset) {
+        fst.plot <- subset(fst.intersect, bp >= input$intersectLow & bp <= input$intersectHigh)
+      }
+      else {
+        fst.plot <- fst.intersect
+      }
       
       if(input$annotations) {
-        plot(fst.FST/sum(fst.FST),
+        plot(fst.plot$bp, fst.plot$FST,
              t = "p", pch = 19,
              col = rgb(0, 0, 0, 0.5),
              xlab = "Position (bp)",
@@ -501,12 +516,12 @@ shinyServer(
                  col = rgb(0.18, 0.55, 0.8, 0.75),
                  border = NA))
         if(input$fstLowess){
-          lines(lowess(fst.f, fst.FST,
-                       f=0.1), col="red")
+          lines(lowess(fst.plot$f, fst.plot$FST,
+                       f = 0.1), col = "red")
         }
       }
       else {
-        plot(fst.FST/sum(fst.FST),
+        plot(fst.plot$bp, fst.plot$FST,
              t = "p", pch = 19,
              col = rgb(0, 0, 0, 0.5),
              xlab = "Position (bp)",
@@ -516,8 +531,8 @@ shinyServer(
              ylim = ranges3$y
         )
         if(input$fstLowess) {
-          lines(lowess(fst.f, fst.FST, f = 0.1,
-                       col ="red"))
+          lines(lowess(fst.plot$f, fst.plot$FST, f = 0.1),
+                       col ="red")
         }
       }
     })
@@ -546,7 +561,9 @@ shinyServer(
         dataInputSFS()
 
       }, error = function(err) {
-        sfs <- fread("sfs_example.txt", sep = "\t")
+        Derived <- as.matrix(fread("output_barley1_PH_DerivedSFS", header = FALSE))
+        sfs <- as.data.frame(t(Derived))
+        setnames(sfs, sfs.headers)
       })
 
       # Graph SFS here
@@ -575,110 +592,20 @@ shinyServer(
       axis(1, at = sfs.bp, labels = lab)
     })
 
-    # Define possible Admixture headers dependent on the number of K ancestral populations graphed
-    # Headers are for K= 1 to K = 10
-    admix.headers.2 <- c("Pop_1", "Pop_2")
-    admix.headers.3 <- c("Pop_1", "Pop_2", "Pop_3")
-    admix.headers.4 <- c("Pop_1", "Pop_2", "Pop_3", "Pop_4")
-    admix.headers.5 <- c("Pop_1", "Pop_2", "Pop_3", "Pop_4", "Pop_5")
-    admix.headers.6 <- c("Pop_1", "Pop_2", "Pop_3", "Pop_4", "Pop_5", "Pop_6")
-    admix.headers.7 <- c("Pop_1", "Pop_2", "Pop_3", "Pop_4", "Pop_5", "Pop_6", "Pop_7")
-    admix.headers.8 <- c("Pop_1", "Pop_2", "Pop_3", "Pop_4", "Pop_5", "Pop_6", "Pop_8")
-    admix.headers.9 <- c("Pop_1", "Pop_2", "Pop_3", "Pop_4", "Pop_5", "Pop_6", "Pop_8", "Pop_9")
-    admix.headers.10 <- c("Pop_1", "Pop_2", "Pop_3", "Pop_4", "Pop_5", "Pop_6", "Pop_8", "Pop_9", "Pop_10")
-    
-    # Admixture plot 5 for 5 K ancestral populations
-    output$admixPlot5 <- renderPlot({
+    # Admixture plot
+    output$admixPlot <- renderPlot({
       admix <- tryCatch({
         dataInputAdmix()
       },error = function(err) {
-        admix <- read.table("ngsadmix_example.txt")
+        admix <- t(as.matrix(read.table("ngsadmix_example.txt")))
       })
-      admix.5pop <- admix[1:12, ]
-      setnames(admix.5pop, admix.headers.5)
-      admix.5dat <- t(as.data.frame(as.matrix(admix.5pop)))
-      # Graphing admixPlot5
-      barplot(admix.5dat, col=c("#006BA4","#FF800E","#A2C8EC",
+      barplot(admix, col=c("#006BA4","#FF800E","#A2C8EC",
                            "#898989","#ABABAB","#595959",
                            "#5F9ED1","#CFCFCF","#FFBC79","#C85200"),
-              space=0, 
-              xaxt = 'n',
-              border=NA, 
-              xlab="Individuals", 
-              ylab="admixture proportion",
-              main = "Admixture 5 Ancestral Populations")
-    })
-    
-    # Admixture plot 4 for 4 K ancestral populations
-    output$admixPlot4 <- renderPlot({
-      admix <- tryCatch({
-        dataInputAdmix()
-      },error = function(err) {
-        admix <- read.table("ngsadmix_example.txt")
-      })
-      admix.4pop <- admix[13:24, ]
-      # 5th column is NAs
-      setnames(admix.4pop, admix.headers.5)
-      admix.4dat <- t(as.data.frame(as.matrix(admix.4pop)))
-  
-      # Graphing admixPlot4  
-      barplot(admix.4dat, col=c("#006BA4","#FF800E","#A2C8EC",
-                                "#898989","#ABABAB","#595959",
-                                "#5F9ED1","#CFCFCF","#FFBC79","#C85200"),
-              space=0,
-              xaxt = 'n',
-              border=NA, 
-              xlab="Individuals", 
-              ylab="admixture proportion",
-              main = "Admixture 4 Ancestral Populations")
-    })
-    
-    # Admixture plot 3 for 3 K ancestral populations
-    output$admixPlot3 <- renderPlot({
-      admix <- tryCatch({
-        dataInputAdmix()
-      },error = function(err) {
-        admix <- read.table("ngsadmix_example.txt")
-      })
-      admix.3pop <- admix[25:36, ]
-      # 4th and 5th columns are NAs
-      setnames(admix.3pop, admix.headers.5)
-      admix.3dat <- t(as.data.frame(as.matrix(admix.3pop)))
-      
-      # Graphing admixPlot3  
-      barplot(admix.3dat, col=c("#006BA4","#FF800E","#A2C8EC",
-                                "#898989","#ABABAB","#595959",
-                                "#5F9ED1","#CFCFCF","#FFBC79","#C85200"),
-              space=0, 
-              xaxt = 'n',
-              border=NA, 
-              xlab="Individuals", 
-              ylab="admixture proportion",
-              main = "Admixture 3 Ancestral Populations")
-    })
-    
-    # Admixture plot 2 for 2 K ancestral populations
-    output$admixPlot2 <- renderPlot({
-      admix <- tryCatch({
-        dataInputAdmix() 
-      },error = function(err) {
-        admix <- read.table("ngsadmix_example.txt")
-      })
-      admix.2pop <- admix[37:48, ]
-      # 3rd, 4th and 5th columns are NAs
-      setnames(admix.2pop, admix.headers.5)
-      admix.2dat <- t(as.data.frame(as.matrix(admix.2pop)))
-      
-      # Graphing admixPlot2  
-      barplot(admix.2dat, col=c("#006BA4","#FF800E","#A2C8EC",
-                                "#898989","#ABABAB","#595959",
-                                "#5F9ED1","#CFCFCF","#FFBC79","#C85200"),
-              space=0,
-              xaxt = 'n',
-              border=NA, 
-              xlab="Individuals", 
-              ylab="admixture proportion",
-              main = "Admixture 2 Ancestral Populations")
+              space = 0,
+              border = NA,
+              xlab = "Individuals",
+              ylab = "Admixture proportion")
     })
     
     # ABBA BABA plot output
@@ -714,23 +641,13 @@ shinyServer(
                      length = 0.05, unit = "native",
                      angle = 90, code = 3)
       }
-      # Making sure columns are numeric
-      d.current.Dstat <- as.vector(d.current[, "Dstat"])
-      d.current.SE <- as.vector(d.current[, "SE"])
-      # Do the math
-      d.current.minus <- d.current.Dstat-d.current.SE
-      d.current.plus <- d.current.Dstat+d.current.SE
-      # Create combined factors to be used in dotplot formula
-      dstat.data <- cbind(d.current.Dstat, d.current.minus, d.current.plus)
-      # Graph dotplot
-      dotplot(factor(as.vector(d.current[, "H1"])) ~ as.vector(dstat.data), 
-              col = "blue", pch = 20, panel = lattice.getOption("mypanel.Dotplot"),
-              xlab = "D", ylab = "Taxon",
-              main = "D statistic comparison",
-              title = paste("D statistic comparison where H2=", 
-                          input$h2, " and H3=", 
-                          input$h3,
-                          sep=""))
+      # Creating plot with error bars 
+      Dotplot(factor(d.current$H1) ~ Cbind(d.current$Dstat, 
+                                           d.current$Dstat-d.current$SE, 
+                                           d.current$Dstat+d.current$SE), 
+              col = "blue", pch = 20, panel = mypanel.Dotplot, 
+              xlab = "D", ylab = "Taxon", 
+              title = paste("D statistic comparison where H2=", input$h2, " and H3=", input$h3, sep = ""))
     })
     # Output table of ABBA BABA values
     output$ABBABABATable <- renderDataTable({

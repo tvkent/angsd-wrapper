@@ -169,12 +169,11 @@ shinyUI(fluidPage(
                   hr()),
           textInput('h2', label="H2", value='NA11993'),
           textInput('h3', label="H3", value='NA12763'),
-          submitButton(text = "Apply Changes", icon = NULL, width = NULL),
           hr(),
           tags$h4(class = "header",
                   tags$h5("The table includes the output ABBABABA file from ANGSD-wrapper with the addition of a 'Pvalue' column."),
                   tags$h5("1. Output of ABBABABA file from ANGSD-wrapper"),
-                  tags$h5("2. The 'Pvalue' column is calculated with the formula 2*pnorm(-abs(z-score))"),
+                  tags$h5("2. Additional 'Pvalue' column calculated with the formula 2*pnorm(-abs(z-score))"),
                   hr(),
                   tags$h5("The table should be used as supplemental data to determine the most significant tree orientation. The table is searchable and can be organized by column."))
         ),
@@ -196,7 +195,7 @@ shinyUI(fluidPage(
           headerPanel("Fst",
                       windowTitle = "Fst Graph"),
           fileInput('userFst',
-                    label= "Choose '.fst' Fst File"
+                    label= "Choose '.fst.graph.me' Fst File"
           ),
           tags$h4(class = "header",
                   tags$h4("Interactive Zoom and Hover:"),
@@ -305,26 +304,7 @@ shinyUI(fluidPage(
         ),
         mainPanel(
           fluidRow(
-            column(
-              width = 6, height = 300,
-              h4("K = 2"),
-              plotOutput("admixPlot2")
-            ),
-            column(
-              width = 6, height = 300,
-              h4("K = 3"),
-              plotOutput("admixPlot3")
-            ),
-            column(
-              width = 6, height = 300,
-              h4("K = 4"),
-              plotOutput("admixPlot4")
-            ),
-            column(
-              width = 6, height = 300,
-              h4("K = 5"),
-              plotOutput("admixPlot5")
-            )
+            plotOutput("admixPlot")
           )
           )
         )
