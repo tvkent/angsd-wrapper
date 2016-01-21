@@ -210,36 +210,50 @@ mv ${OUT/2DSFS}/shared.pos.gz ${OUT}
 gzip -df ${OUT}/shared.pos.gz
 N_SITES=`wc -l < "${OUT}"/shared.pos`
 
-#   Generate a prior spectrum using ngs2dSFS from ngsPopGen
-echo "WRAPPER: generating spectrum..." >&2
-${NGS_POPGEN}/ngs2dSFS \
-    -postfiles ${OUT}/${GROUP_1}_Intergenic.saf ${OUT}/${GROUP_2}_Intergenic.saf \
-    -outfile ${OUT}/${GROUP_1}.${GROUP_2}.spectrum.txt \
-    -nind ${N_IND1} ${N_IND2} \
-    -relative ${RELATIVE} \
-    -maxlike ${MAX_LIKE} \
-    -block_size ${BLOCK_SIZE} \
-    -nsites ${N_SITES}
+#   Using ANGSD's Fst implementation
+#   Prepare Fst
+"${ANGSD_DIR}"/misc/realSFS index \
+    "${OUT}"/"${GROUP_1}"_Intergenic.saf.idx \
+    "${OUT}"/"${GROUP_2}"_Intergenic.saf.idx \
+    -sfs "${OUT}"/2DSFS_Intergenic."${GROUP_1}"."${GROUP_2}".sfs
+    -P "${N_CORES}" \
+    -fstout "${OUT}"/"${OUT}"/"${GROUP_1}"."${GROUP_2}"
 
-#   Calculate Fst using ngsFST
-echo "WRAPPER: estimating Fst..." >&2
-${NGS_POPGEN}/ngsFST \
-    -postfiles ${OUT}/${GROUP_1}_Intergenic.saf ${OUT}/${GROUP_2}_Intergenic.saf \
-    -priorfile ${OUT}/${GROUP_1}.${GROUP_2}.spectrum.txt \
-    -nind ${N_IND1} ${N_IND2} \
-    -block_size ${BLOCK_SIZE} \
-    -nsites ${N_SITES} \
-    -outfile ${OUT}/${GROUP_1}.${GROUP_2}.fst
+#   Global estimates of Fst
+"${ANGSD_DIR}"/misc/realSFS fst \
+    "${OUT}"/"${OUT}"/"${GROUP_1}"."${GROUP_2}"
+    -P "${N_CORES}"
 
-#   Unzip the mafs files
-gzip -df ${OUT}/${GROUP_1}_Intergenic.mafs.gz
-gzip -df ${OUT}/${GROUP_2}_Intergenic.mafs.gz
-
-#   Merge shared.pos file with Fst output file
-echo "WRAPPER: creating files for Shiny graphing..." >&2
-Rscript ${SOURCE}/Wrappers/fst_bp.R \
-    ${OUT}/shared.pos \
-    ${OUT}/${GROUP_1}.${GROUP_2}.fst \
-    ${OUT}/${GROUP_1}_Intergenic.mafs \
-    ${OUT}/${GROUP_2}_Intergenic.mafs \
-    ${OUT}/"${PROJECT}".Fst.graph.me
+# #   Generate a prior spectrum using ngs2dSFS from ngsPopGen
+# echo "WRAPPER: generating spectrum..." >&2
+# ${NGS_POPGEN}/ngs2dSFS \
+#     -postfiles ${OUT}/${GROUP_1}_Intergenic.saf ${OUT}/${GROUP_2}_Intergenic.saf \
+#     -outfile ${OUT}/${GROUP_1}.${GROUP_2}.spectrum.txt \
+#     -nind ${N_IND1} ${N_IND2} \
+#     -relative ${RELATIVE} \
+#     -maxlike ${MAX_LIKE} \
+#     -block_size ${BLOCK_SIZE} \
+#     -nsites ${N_SITES}
+#
+# #   Calculate Fst using ngsFST
+# echo "WRAPPER: estimating Fst..." >&2
+# ${NGS_POPGEN}/ngsFST \
+#     -postfiles ${OUT}/${GROUP_1}_Intergenic.saf ${OUT}/${GROUP_2}_Intergenic.saf \
+#     -priorfile ${OUT}/${GROUP_1}.${GROUP_2}.spectrum.txt \
+#     -nind ${N_IND1} ${N_IND2} \
+#     -block_size ${BLOCK_SIZE} \
+#     -nsites ${N_SITES} \
+#     -outfile ${OUT}/${GROUP_1}.${GROUP_2}.fst
+#
+# #   Unzip the mafs files
+# gzip -df ${OUT}/${GROUP_1}_Intergenic.mafs.gz
+# gzip -df ${OUT}/${GROUP_2}_Intergenic.mafs.gz
+#
+# #   Merge shared.pos file with Fst output file
+# echo "WRAPPER: creating files for Shiny graphing..." >&2
+# Rscript ${SOURCE}/Wrappers/fst_bp.R \
+#     ${OUT}/shared.pos \
+#     ${OUT}/${GROUP_1}.${GROUP_2}.fst \
+#     ${OUT}/${GROUP_1}_Intergenic.mafs \
+#     ${OUT}/${GROUP_2}_Intergenic.mafs \
+#     ${OUT}/"${PROJECT}".Fst.graph.me
