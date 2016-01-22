@@ -177,9 +177,6 @@ To download the example dataset, please run \n\
     "shiny" )
         Rscript "${SOURCE}"/Wrappers/startShiny.R "${SOURCE}"
         ;;
-    "test" )
-        bash "${SOURCE}"/Wrappers/test.sh
-        ;;
     * )
         usage
         ;;
