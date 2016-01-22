@@ -252,19 +252,10 @@ N_SITES=`wc -l < "${OUT}"/shared.pos`
 # #   Merge shared.pos file with Fst output file
 # echo "WRAPPER: creating files for Shiny graphing..." >&2
 # Rscript ${SOURCE}/Wrappers/fst_bp.R \
+#     ${SOURCE} \
 #     ${OUT}/shared.pos \
 #     ${OUT}/${GROUP_1}.${GROUP_2}.fst \
 #     ${OUT}/${GROUP_1}_Intergenic.mafs \
 #     ${OUT}/${GROUP_2}_Intergenic.mafs \
 #     ${OUT}/"${PROJECT}".Fst.graph.me
-
-#   Merge shared.pos file with Fst output file
-echo "WRAPPER: creating files for Shiny graphing..." >&2
-Rscript ${SOURCE}/Wrappers/fst_bp.R \
-    ${SOURCE} \
-    ${OUT}/shared.pos \
-    ${OUT}/${GROUP_1}.${GROUP_2}.fst \
-    ${OUT}/${GROUP_1}_Intergenic.mafs \
-    ${OUT}/${GROUP_2}_Intergenic.mafs \
-    ${OUT}/"${PROJECT}".Fst.graph.me
 
