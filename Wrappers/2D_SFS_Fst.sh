@@ -212,7 +212,7 @@ N_SITES=`wc -l < "${OUT}"/shared.pos`
 
 #   Using ANGSD's Fst implementation
 #   Prepare Fst
-"${ANGSD_DIR}"/misc/realSFS index \
+"${ANGSD_DIR}"/misc/realSFS fst index \
     "${OUT}"/"${GROUP_1}"_Intergenic.saf.idx \
     "${OUT}"/"${GROUP_2}"_Intergenic.saf.idx \
     -sfs "${OUT}"/2DSFS_Intergenic."${GROUP_1}"."${GROUP_2}".sfs
@@ -220,8 +220,8 @@ N_SITES=`wc -l < "${OUT}"/shared.pos`
     -fstout "${OUT}"/"${OUT}"/"${GROUP_1}"."${GROUP_2}"
 
 #   Global estimates of Fst
-"${ANGSD_DIR}"/misc/realSFS fst \
-    "${OUT}"/"${OUT}"/"${GROUP_1}"."${GROUP_2}"
+"${ANGSD_DIR}"/misc/realSFS fst stats \
+    "${OUT}"/"${OUT}"/"${GROUP_1}"."${GROUP_2}" \
     -P "${N_CORES}"
 
 # #   Generate a prior spectrum using ngs2dSFS from ngsPopGen
