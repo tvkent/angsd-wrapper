@@ -215,7 +215,7 @@ N_SITES=`wc -l < "${OUT}"/shared.pos`
 "${ANGSD_DIR}"/misc/realSFS fst index \
     "${OUT}"/"${GROUP_1}"_Intergenic.saf.idx \
     "${OUT}"/"${GROUP_2}"_Intergenic.saf.idx \
-    -sfs "${OUT}"/2DSFS_Intergenic."${GROUP_1}"."${GROUP_2}".sfs
+    -sfs "${OUT}"/2DSFS_Intergenic."${GROUP_1}"."${GROUP_2}".sfs \
     -P "${N_CORES}" \
     -fstout "${OUT}"/"${OUT}"/"${GROUP_1}"."${GROUP_2}"
 

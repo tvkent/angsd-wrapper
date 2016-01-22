@@ -14,6 +14,7 @@ case "${setup_routine}" in
         if ! `command -v wget > /dev/null 2> /dev/null`; then echo "Please install Wget and place in your PATH" >&2 ; exit 1; fi
         #   Let angsd-wrapper be run from anywhere
         echo alias "angsd-wrapper='`pwd -P`/angsd-wrapper'" >> ~/.bash_profile
+        if [[ $(uname) == "Darwin" ]]; then echo 'export PATH=/usr/local/include/gsl:$PATH' >> ~/.bash_profile; source ~/.bash_profile; fi # Make sure we can see GSL on Mac OS C
         #   Make the 'dependencies' directory
         cd "${SOURCE}"
         mkdir dependencies
