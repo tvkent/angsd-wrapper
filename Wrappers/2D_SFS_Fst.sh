@@ -217,12 +217,13 @@ N_SITES=`wc -l < "${OUT}"/shared.pos`
     "${OUT}"/"${GROUP_2}"_Intergenic.saf.idx \
     -sfs "${OUT}"/2DSFS_Intergenic."${GROUP_1}"."${GROUP_2}".sfs \
     -P "${N_CORES}" \
-    -fstout "${OUT}"/"${OUT}"/"${GROUP_1}"."${GROUP_2}"
+    -fstout "${OUT}"/"${GROUP_1}"."${GROUP_2}"
 
 #   Global estimates of Fst
 "${ANGSD_DIR}"/misc/realSFS fst stats \
-    "${OUT}"/"${OUT}"/"${GROUP_1}"."${GROUP_2}" \
-    -P "${N_CORES}"
+    "${OUT}"/"${GROUP_1}"."${GROUP_2}".fst.idx \
+    -P "${N_CORES}" \
+    > "${OUT}"/"${GROUP_1}"."${GROUP_2}".fst.stats
 
 # #   Generate a prior spectrum using ngs2dSFS from ngsPopGen
 # echo "WRAPPER: generating spectrum..." >&2
