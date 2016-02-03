@@ -27,8 +27,8 @@ mkdir -p "${OUT}"
 
 #   Variables created from transforming other variables
 #       The number of individuals in the groups we are analyzing
-N_IND1=$(wc -l < "${G1_SAMPLE_LIST}")
-N_IND2=$(wc -l < "${G2_SAMPLE_LIST}")
+N_IND1=$(wc -l < "${G1_SAMPLES}")
+N_IND2=$(wc -l < "${G2_SAMPLES}")
 #       How many inbreeding coefficients are supplied?
 N_F1=$(wc -l < "${G1_INBREEDING}")
 N_F2=$(wc -l < "${G2_INBREEDING}")
@@ -50,7 +50,7 @@ else
     then
         echo "WRAPPER: $GROUP_1 sfs starting..." >&2
         "${ANGSD_DIR}"/angsd \
-            -bam "${G1_SAMPLE_LIST}" \
+            -bam "${G1_SAMPLES}" \
             -out "${OUT}"/"${GROUP_1}"_Intergenic \
             -doMajorMinor "${DO_MAJORMINOR}" \
             -doMaf "${DO_MAF}" \
@@ -72,7 +72,7 @@ else
     then
         echo "WRAPPER: $GROUP_1 sfs starting" >&2
         "${ANGSD_DIR}"/angsd \
-            -bam "${G1_SAMPLE_LIST}" \
+            -bam "${G1_SAMPLES}" \
             -out "${OUT}"/"${GROUP_1}"_Intergenic \
             -doMajorMinor "${DO_MAJORMINOR}" \
             -doMaf "${DO_MAF}" \
@@ -92,7 +92,7 @@ else
     else
         echo "WRAPPER: $GROUP_1 sfs starting" >&2
         "${ANGSD_DIR}"/angsd \
-            -bam "${G1_SAMPLE_LIST}" \
+            -bam "${G1_SAMPLES}" \
             -out "${OUT}"/"${GROUP_1}"_Intergenic \
             -doMajorMinor "${DO_MAJORMINOR}" \
             -doMaf "${DO_MAF}" \
@@ -122,7 +122,7 @@ else
     then
         echo "WRAPPER: $GROUP_2 sfs starting..." >&2
         "${ANGSD_DIR}"/angsd \
-            -bam "${G2_SAMPLE_LIST}" \
+            -bam "${G2_SAMPLES}" \
             -out "${OUT}"/"${GROUP_2}"_Intergenic \
             -doMajorMinor "${DO_MAJORMINOR}" \
             -doMaf "${DO_MAF}" \
@@ -145,7 +145,7 @@ else
     then
         echo "WRAPPER: $GROUP_2 sfs starting..." >&2
         "${ANGSD_DIR}"/angsd \
-            -bam "${G2_SAMPLE_LIST}" \
+            -bam "${G2_SAMPLES}" \
             -out "${OUT}"/"${GROUP_2}"_Intergenic \
             -doMajorMinor "${DO_MAJORMINOR}" \
             -doMaf "${DO_MAF}" \
@@ -166,7 +166,7 @@ else
     else
         echo "WRAPPER: $GROUP_2 sfs starting..." >&2
         "${ANGSD_DIR}"/angsd \
-            -bam "${G2_SAMPLE_LIST}" \
+            -bam "${G2_SAMPLES}" \
             -out "${OUT}"/"${GROUP_2}"_Intergenic \
             -doMajorMinor "${DO_MAJORMINOR}" \
             -doMaf "${DO_MAF}" \

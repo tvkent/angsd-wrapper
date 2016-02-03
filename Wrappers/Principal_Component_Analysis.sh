@@ -24,13 +24,13 @@ OUT=${SCRATCH}/${PROJECT}/PCA
 mkdir -p "${OUT}"
 
 #   Find number of individuals
-N_IND=$(wc -l < "${SAMPLE_LIST}")
+N_IND=$(wc -l < "${GROUP_SAMPLES}")
 
 #   Do we have a regions file?
 if [[ -f "${REGIONS}" ]]
 then
     "${ANGSD_DIR}"/angsd \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -GL "${GT_LIKELIHOOD}" \
         -out "${OUT}"/"${PROJECT}"_PCA \
         -doMajorMinor "${DO_MAJORMINOR}" \
@@ -44,7 +44,7 @@ then
 elif [[ -z "${REGIONS}" ]]
 then
     "${ANGSD_DIR}"/angsd \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -GL "${GT_LIKELIHOOD}" \
         -out "${OUT}"/"${PROJECT}"_PCA \
         -doMajorMinor "${DO_MAJORMINOR}" \
@@ -56,7 +56,7 @@ then
 #   Assuming a single reigon was defined in config file
 else
     "${ANGSD_DIR}"/angsd \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -GL "${GT_LIKELIHOOD}" \
         -out "${OUT}"/"${PROJECT}"_PCA \
         -doMajorMinor "${DO_MAJORMINOR}" \

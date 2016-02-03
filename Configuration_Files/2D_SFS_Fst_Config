@@ -32,7 +32,7 @@ REGIONS=
 GROUP_1=
 
 #   Sample list for group 1
-G1_SAMPLE_LIST=
+G1_SAMPLES=
 
 #   Inbreeding coefficients for group 1
 G1_INBREEDING=
@@ -41,7 +41,7 @@ G1_INBREEDING=
 GROUP_2=
 
 #   Sample list for group 2
-G2_SAMPLE_LIST=
+G2_SAMPLES=
 
 #   Inbreeding coefficients for group 2
 G2_INBREEDING=

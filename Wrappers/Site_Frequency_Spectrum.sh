@@ -20,16 +20,16 @@ ANGSD_DIR=${SOURCE}/dependencies/angsd
 
 #   Variables created from transforming other variables
 #       The number of individuals in the taxon we are analyzing
-N_IND=$(wc -l < "${SAMPLE_LIST}")
+N_IND=$(wc -l < "${GROUP_SAMPLES}")
 #       How many inbreeding coefficients are supplied?
-N_F=$(wc -l < "${SAMPLE_INBREEDING}")
+N_F=$(wc -l < "${GROUP_INBREEDING}")
 #       For ANGSD, the actual sample size is twice the number of individuals, since each individual has two chromosomes.
 #       The individual inbreeding coefficents take care of the mismatch between these two numbers
 
 #   Perform a check to see if number of individuals matches number of inbreeding coefficients
 if [ "${N_IND}" -ne "${N_F}" ]
 then
-    echo "Mismatch between number of samples in ${SAMPLE_LIST} and ${SAMPLE_INBREEDING}"
+    echo "Mismatch between number of samples in ${GROUP_SAMPLES} and ${GROUP_INBREEDING}"
     exit 1
 fi
 
@@ -46,9 +46,9 @@ else
     if [[ -f "${REGIONS}" ]]
     then
         "${ANGSD_DIR}"/angsd \
-            -bam "${SAMPLE_LIST}" \
+            -bam "${GROUP_SAMPLES}" \
             -out "${OUT}"/"${PROJECT}"_SFSOut \
-            -indF "${SAMPLE_INBREEDING}" \
+            -indF "${GROUP_INBREEDING}" \
             -doSaf "${DO_SAF}" \
             -uniqueOnly "${UNIQUE_ONLY}" \
             -anc "${ANC_SEQ}" \
@@ -70,9 +70,9 @@ else
     elif [[ -z "${REGIONS}" ]]
     then
         "${ANGSD_DIR}"/angsd \
-            -bam "${SAMPLE_LIST}" \
+            -bam "${GROUP_SAMPLES}" \
             -out "${OUT}"/"${PROJECT}"_SFSOut \
-            -indF "${SAMPLE_INBREEDING}" \
+            -indF "${GROUP_INBREEDING}" \
             -doSaf "${DO_SAF}" \
             -uniqueOnly "${UNIQUE_ONLY}" \
             -anc "${ANC_SEQ}" \
@@ -92,9 +92,9 @@ else
     #   Assuming a single reigon was defined in config file
     else
         "${ANGSD_DIR}"/angsd \
-            -bam "${SAMPLE_LIST}" \
+            -bam "${GROUP_SAMPLES}" \
             -out "${OUT}"/"${PROJECT}"_SFSOut \
-            -indF "${SAMPLE_INBREEDING}" \
+            -indF "${GROUP_INBREEDING}" \
             -doSaf "${DO_SAF}" \
             -uniqueOnly "${UNIQUE_ONLY}" \
             -anc "${ANC_SEQ}" \

@@ -53,7 +53,7 @@ then
         -blockSize "${BLOCKSIZE}" \
         -doCounts "${DO_COUNTS}" \
         -anc "${OUTGROUP}" \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -uniqueOnly "${UNIQUE_ONLY}" \
         -minMapQ "${MIN_MAPQ}" \
         -minQ "${MIN_BASEQUAL}" \
@@ -72,7 +72,7 @@ then
         -blockSize "${BLOCKSIZE}" \
         -doCounts "${DO_COUNTS}" \
         -anc "${OUTGROUP}" \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -uniqueOnly "${UNIQUE_ONLY}" \
         -minMapQ "${MIN_MAPQ}" \
         -minQ "${MIN_BASEQUAL}" \
@@ -89,7 +89,7 @@ else
         -blockSize "${BLOCKSIZE}" \
         -doCounts "${DO_COUNTS}" \
         -anc "${OUTGROUP}" \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -uniqueOnly "${UNIQUE_ONLY}" \
         -minMapQ "${MIN_MAPQ}" \
         -minQ "${MIN_BASEQUAL}" \
@@ -104,5 +104,5 @@ fi
 echo "Using jackKnife.R to finish Abbababa" >&2
 Rscript "${ANGSD_DIR}"/R/jackKnife.R \
     file="${OUT}"/"${PROJECT}".D.abbababa \
-    indNames="${SAMPLE_LIST}" \
+    indNames="${GROUP_SAMPLES}" \
     outfile="${OUT}"/"${PROJECT}".abbababa

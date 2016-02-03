@@ -13,10 +13,10 @@ COMMON=
 #   If we aren't using the Common_Config file, specify these variables
 #   If Common_Config is specified, leave these blank
 #   Define a list of samples
-SAMPLE_LIST=
+GROUP_SAMPLES=
 
 #   Define a list of inbreeding coefficients
-SAMPLE_INBREEDING=
+GROUP_INBREEDING=
 
 #   Ancestral and Reference sequences
 ANC_SEQ=

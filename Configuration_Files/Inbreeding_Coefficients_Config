@@ -13,7 +13,7 @@ COMMON=
 #   If we aren't using the Common_Config file, specify these variables
 #   If Common_Config is specified, leave these blank
 #   Define a list of samples
-SAMPLE_LIST=
+GROUP_SAMPLES=
 
 #   Ancestral and Reference sequences
 ANC_SEQ=

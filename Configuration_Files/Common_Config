@@ -7,11 +7,11 @@ set -o pipefail
 #   A simple script to hold common variables for angsd-wrapper
 
 #   Define a list of samples
-SAMPLE_LIST=
+GROUP_SAMPLES=
 
 #   Define a list of inbreeding coefficients
 #	This should end in '_.indF'
-SAMPLE_INBREEDING=
+GROUP_INBREEDING=
 
 #   Ancestral sequence
 ANC_SEQ=

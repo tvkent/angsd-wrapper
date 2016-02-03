@@ -21,7 +21,7 @@ ANGSD_DIR="${SOURCE}"/dependencies/angsd
 #   Where is ngsF?
 NGSF_DIR="${SOURCE}"/dependencies/ngsF
 
-N_IND=$(wc -l < "${SAMPLE_LIST}")
+N_IND=$(wc -l < "${GROUP_SAMPLES}")
 
 #   Make the outdirectory
 OUT=${SCRATCH}/${PROJECT}/Inbreeding_Coefficients
@@ -38,7 +38,7 @@ else
     if [[ -f "${REGIONS}" ]]
     then
         "${ANGSD_DIR}"/angsd \
-            -bam "${SAMPLE_LIST}" \
+            -bam "${GROUP_SAMPLES}" \
             -rf "${REGIONS}" \
             -doGLF "${DO_GLF}" \
             -GL "${GT_LIKELIHOOD}" \
@@ -55,7 +55,7 @@ else
     elif [[ -z "${REGIONS}" ]]
     then
         "${ANGSD_DIR}"/angsd \
-            -bam "${SAMPLE_LIST}" \
+            -bam "${GROUP_SAMPLES}" \
             -doGLF "${DO_GLF}" \
             -GL "${GT_LIKELIHOOD}" \
             -out "${OUT}"/"${PROJECT}" \
@@ -70,7 +70,7 @@ else
     #   Assuming a single reigon was defined in config file
     else
         "${ANGSD_DIR}"/angsd \
-            -bam "${SAMPLE_LIST}" \
+            -bam "${GROUP_SAMPLES}" \
             -r "${REGIONS}" \
             -doGLF "${DO_GLF}" \
             -GL "${GT_LIKELIHOOD}" \

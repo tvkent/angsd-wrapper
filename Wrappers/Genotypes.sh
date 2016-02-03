@@ -17,14 +17,14 @@ SOURCE=$2
 
 #   Variables created from transforming other variables
 #       The number of individuals in the taxon we are analyzing
-N_IND=$(wc -l < "${SAMPLE_LIST}")
+N_IND=$(wc -l < "${GROUP_SAMPLES}")
 #       How many inbreeding coefficients are supplied?
-N_F=$(wc -l < "${SAMPLE_INBREEDING}")
+N_F=$(wc -l < "${GROUP_INBREEDING}")
 
 #   Perform a check to see if number of individuals matches number of inbreeding coefficients
 if [ "${N_IND}" -ne "${N_F}" ]
 then
-    echo "Mismatch between number of samples in ${SAMPLE_LIST} and ${SAMPLE_INBREEDING}"
+    echo "Mismatch between number of samples in ${GROUP_SAMPLES} and ${GROUP_INBREEDING}"
     exit 1
 fi
 
@@ -40,9 +40,9 @@ ANGSD_DIR="${SOURCE}"/dependencies/angsd
 if [[ -f "${REGIONS}" ]]
 then
     "${ANGSD_DIR}"/angsd \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -out "${OUT}"/"${PROJECT}"_snps \
-        -indF "${SAMPLE_INBREEDING}" \
+        -indF "${GROUP_INBREEDING}" \
         -doMajorMinor "${DO_MAJORMINOR}" \
         -uniqueOnly "${UNIQUE_ONLY}" \
         -minMapQ "${MIN_MAPQ}" \
@@ -61,9 +61,9 @@ then
 elif [[ -z "${REGIONS}" ]]
 then
     "${ANGSD_DIR}"/angsd \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -out "${OUT}"/"${PROJECT}"_snps \
-        -indF "${SAMPLE_INBREEDING}" \
+        -indF "${GROUP_INBREEDING}" \
         -doMajorMinor "${DO_MAJORMINOR}" \
         -uniqueOnly "${UNIQUE_ONLY}" \
         -minMapQ "${MIN_MAPQ}" \
@@ -80,9 +80,9 @@ then
 #   Assuming a single reigon was defined in config file
 else
     "${ANGSD_DIR}"/angsd \
-        -bam "${SAMPLE_LIST}" \
+        -bam "${GROUP_SAMPLES}" \
         -out "${OUT}"/"${PROJECT}"_snps \
-        -indF "${SAMPLE_INBREEDING}" \
+        -indF "${GROUP_INBREEDING}" \
         -doMajorMinor "${DO_MAJORMINOR}" \
         -uniqueOnly "${UNIQUE_ONLY}" \
         -minMapQ "${MIN_MAPQ}" \
