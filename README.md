@@ -12,6 +12,10 @@ ANGSD-wrapper is a utility developed to aid in the analysis of next generation s
 
 Likelihood based approaches are used in ANGSD to calculate summary statistics from next generation sequencing data. The wrapper scripts and documentation are designed to make ANGSD user friendly.
 
+## Program Has a Paper!
+
+See the early access version at [PeerJ Preprints](https://peerj.com/preprints/1472/)
+
 ## Installing ANGSD-wrapper
 
 To install ANGSD-wrapper, download from GitHub
